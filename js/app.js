@@ -27,13 +27,32 @@ const CAT_INFO = {
 
 function initCatSelector() {
     const catTabs = document.querySelectorAll('.cat-tab');
+    console.log('Found cat tabs:', catTabs.length);
+    
     catTabs.forEach(tab => {
-        tab.addEventListener('click', () => {
+        tab.addEventListener('click', (e) => {
+            e.preventDefault();
+            e.stopPropagation();
+            
             catTabs.forEach(t => t.classList.remove('active'));
             tab.classList.add('active');
             currentCat = tab.dataset.cat;
+            
+            console.log('Selected cat:', currentCat);
+            
+            updateCatIndicator();
         });
     });
+    
+    updateCatIndicator();
+}
+
+function updateCatIndicator() {
+    const catInfo = CAT_INFO[currentCat];
+    const indicator = document.getElementById('catIndicator');
+    if (indicator) {
+        indicator.textContent = `${catInfo.emoji} ${catInfo.name}`;
+    }
 }
 
 function initImageUpload() {
