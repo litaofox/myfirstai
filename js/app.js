@@ -420,8 +420,28 @@ function renderHistory() {
 
 function initDemoMode() {
     const demoSwitch = document.getElementById('demoMode');
+    
+    function updateDemoButtons(isDemo) {
+        const demoBtns = document.querySelectorAll('.demo-btn');
+        demoBtns.forEach(btn => {
+            btn.disabled = !isDemo;
+            if (isDemo) {
+                btn.classList.remove('disabled');
+            } else {
+                btn.classList.add('disabled');
+            }
+        });
+
+        const demoBadge = document.getElementById('demoBadge');
+        if (demoBadge) {
+            demoBadge.textContent = isDemo ? '🎬 演示模式' : '🔍 正式模式';
+            demoBadge.className = `demo-badge ${isDemo ? 'active' : ''}`;
+        }
+    }
+
     demoSwitch.addEventListener('change', (e) => {
         modelService.setDemoMode(e.target.checked);
+        updateDemoButtons(e.target.checked);
         if (e.target.checked) {
             alert('演示模式已开启，识别结果为模拟数据');
         } else {
@@ -430,6 +450,7 @@ function initDemoMode() {
     });
 
     modelService.setDemoMode(demoSwitch.checked);
+    updateDemoButtons(demoSwitch.checked);
 }
 
 function showLoading(show) {

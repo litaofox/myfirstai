@@ -729,6 +729,58 @@ main {
     box-shadow: 0 0 20px rgba(0, 212, 255, 0.5);
 }
 
+.demo-btn {
+    background: rgba(255, 193, 7, 0.1);
+    border: 1px solid #FFC107;
+    color: #FFC107;
+}
+
+.demo-btn:hover {
+    background: #FFC107;
+    color: #1a1a2e;
+    box-shadow: 0 0 20px rgba(255, 193, 7, 0.5);
+}
+
+.demo-btn.disabled {
+    background: rgba(100, 100, 100, 0.1);
+    border: 1px solid rgba(100, 100, 100, 0.3);
+    color: rgba(100, 100, 100, 0.5);
+    cursor: not-allowed;
+    opacity: 0.5;
+}
+
+.demo-btn.disabled:hover {
+    background: rgba(100, 100, 100, 0.1);
+    color: rgba(100, 100, 100, 0.5);
+    box-shadow: none;
+}
+
+.demo-badge {
+    display: inline-block;
+    background: rgba(100, 100, 100, 0.15);
+    border: 1px solid rgba(100, 100, 100, 0.3);
+    border-radius: 20px;
+    padding: 6px 16px;
+    font-size: 0.85em;
+    font-weight: 600;
+    color: rgba(100, 100, 100, 0.7);
+    margin-top: 10px;
+    transition: all 0.3s ease;
+}
+
+.demo-badge.active {
+    background: rgba(255, 193, 7, 0.15);
+    border-color: #FFC107;
+    color: #FFC107;
+    box-shadow: 0 0 15px rgba(255, 193, 7, 0.3);
+    animation: pulse-yellow 2s ease-in-out infinite;
+}
+
+@keyframes pulse-yellow {
+    0%, 100% { box-shadow: 0 0 15px rgba(255, 193, 7, 0.3); }
+    50% { box-shadow: 0 0 25px rgba(255, 193, 7, 0.5); }
+}
+
 .history-section {
     margin-bottom: 20px;
 }
