@@ -1,4 +1,5 @@
 document.addEventListener('DOMContentLoaded', () => {
+    initCatSelector();
     initImageUpload();
     initAudioRecording();
     initResultSection();
@@ -16,6 +17,24 @@ let mediaRecorder = null;
 let audioChunks = [];
 let audioBlob = null;
 let audioUrl = null;
+let currentCat = 'cola';
+
+const CAT_INFO = {
+    cola: { name: '可乐', emoji: '🥤' },
+    caocao: { name: '草草', emoji: '🌿' },
+    other: { name: '其他猫咪', emoji: '❓' }
+};
+
+function initCatSelector() {
+    const catTabs = document.querySelectorAll('.cat-tab');
+    catTabs.forEach(tab => {
+        tab.addEventListener('click', () => {
+            catTabs.forEach(t => t.classList.remove('active'));
+            tab.classList.add('active');
+            currentCat = tab.dataset.cat;
+        });
+    });
+}
 
 function initImageUpload() {
     const uploadArea = document.getElementById('imageUploadArea');
@@ -219,7 +238,7 @@ function initAudioRecording() {
         const height = canvas.height;
 
         ctx.clearRect(0, 0, width, height);
-        ctx.fillStyle = '#FFB6C1';
+        ctx.fillStyle = '#00D4FF';
 
         for (let i = 0; i < width; i++) {
             const barHeight = Math.random() * height * 0.8 + height * 0.1;
@@ -252,8 +271,9 @@ function initResultSection() {
 
 function updateFusionResult() {
     const result = fuseResults(imageResult, audioResult);
+    const catInfo = CAT_INFO[currentCat];
 
-    document.getElementById('resultSource').textContent = result.source;
+    document.getElementById('resultSource').textContent = `${catInfo.emoji} ${catInfo.name} · ${result.source}`;
     document.getElementById('resultIcon').textContent = result.stateIcon;
     document.getElementById('resultState').textContent = result.stateName;
     document.getElementById('resultSuggestion').textContent = result.suggestion;
@@ -278,8 +298,18 @@ function initCatsSection() {
     const catBtns = document.querySelectorAll('.cat-action-btn');
     catBtns.forEach(btn => {
         btn.addEventListener('click', (e) => {
-            const catName = e.target.dataset.cat;
-            const imgSrc = catName === 'cola' ? 'assets/可乐.jpg' : 'assets/草草.jpg';
+            const catId = e.target.dataset.cat;
+            const catTabs = document.querySelectorAll('.cat-tab');
+            catTabs.forEach(tab => {
+                if (tab.dataset.cat === catId) {
+                    tab.classList.add('active');
+                } else {
+                    tab.classList.remove('active');
+                }
+            });
+            currentCat = catId;
+
+            const imgSrc = catId === 'cola' ? 'assets/可乐.jpg' : 'assets/草草.jpg';
 
             const img = new Image();
             img.crossOrigin = 'anonymous';
@@ -318,9 +348,13 @@ function initHistorySection() {
 }
 
 function saveToHistory(result) {
+    const catInfo = CAT_INFO[currentCat];
     const history = JSON.parse(localStorage.getItem('catEmotionHistory') || '[]');
     const newItem = {
         id: Date.now(),
+        catId: currentCat,
+        catName: catInfo.name,
+        catEmoji: catInfo.emoji,
         stateId: result.stateId,
         stateName: result.stateName,
         stateIcon: result.stateIcon,
@@ -353,9 +387,10 @@ function renderHistory() {
         const timeStr = `${date.getHours().toString().padStart(2, '0')}:${date.getMinutes().toString().padStart(2, '0')}`;
         return `
             <div class="history-item">
+                <span class="history-cat">${item.catEmoji}</span>
                 <span class="history-icon">${item.stateIcon}</span>
                 <div class="history-content">
-                    <h4>${item.stateName}</h4>
+                    <h4>${item.catName} · ${item.stateName}</h4>
                     <p>${item.source} · 置信度 ${Math.round(item.confidence * 100)}%</p>
                 </div>
                 <span class="history-time">${timeStr}</span>

@@ -1,5 +1,5 @@
 const CONFIG = {
-    platform: 'demo',
+    platform: 'easydl',
     easyDL: {
         apiKey: '',
         secretKey: '',
